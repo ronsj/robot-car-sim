@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber'
 import { Scene3D } from './components/Scene3D'
 import { Minimap } from './components/Minimap'
 import { DPad } from './components/DPad'
+import { DangerZoneWarning } from './components/DangerZoneWarning'
 import { TelemetryPanel } from './components/TelemetryPanel'
 import { useRobotSim } from './hooks/useRobotSim'
 import './styles/app.css'
@@ -23,10 +24,11 @@ const DEFAULT_TELEMETRY = {
 }
 
 export default function App() {
-  const { state, status, updateRate, sendControl, connect, disconnect } =
+  const { state, status, updateRate, sendControl, connect, disconnect, acknowledgeDangerZone } =
     useRobotSim()
 
   const isConnected = status === 'connected'
+  const dangerZonePaused = state?.dangerZonePaused ?? false
 
   const handleControlChange = useCallback(
     (control: {
@@ -87,11 +89,15 @@ export default function App() {
             onDisconnect={disconnect}
           />
           <DPad
-            disabled={!isConnected}
+            disabled={!isConnected || dangerZonePaused}
             onControlChange={handleControlChange}
           />
         </aside>
       </main>
+
+      {dangerZonePaused && (
+        <DangerZoneWarning onContinue={acknowledgeDangerZone} />
+      )}
     </div>
   )
 }

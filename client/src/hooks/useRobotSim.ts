@@ -137,10 +137,19 @@ export function useRobotSim() {
   }, [clearReconnectTimer])
 
   const sendControl = useCallback((control: Omit<ControlMessage, 'type'>) => {
+    if (state?.dangerZonePaused) return
     controlRef.current = { type: 'control', ...control }
     const ws = wsRef.current
     if (ws?.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify(controlRef.current))
+    }
+  }, [state?.dangerZonePaused])
+
+  const acknowledgeDangerZone = useCallback(() => {
+    controlRef.current = NEUTRAL_CONTROL
+    const ws = wsRef.current
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'continue' }))
     }
   }, [])
 
@@ -168,6 +177,7 @@ export function useRobotSim() {
     sendControl,
     connect,
     disconnect,
+    acknowledgeDangerZone,
     lastUpdate: lastUpdateRef.current,
   }
 }
