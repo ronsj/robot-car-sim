@@ -34,7 +34,8 @@ export interface RobotState {
 
 export interface Telemetry {
   distance: number
-  collisions: number
+  obstacleCollisions: number
+  dangerZoneCollisions: number
 }
 
 export interface ControlMessage {

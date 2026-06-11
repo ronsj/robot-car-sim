@@ -30,15 +30,35 @@ function circleIntersectsRect(
   return dx * dx + dy * dy < r * r
 }
 
-function collidesAt(x: number, y: number): boolean {
-  const solids = [...world.walls, ...world.obstacles]
-  return solids.some((rect) => circleIntersectsRect(x, y, ROBOT_RADIUS, rect))
+function intersectsAny(x: number, y: number, rects: Rect[]): boolean {
+  return rects.some((rect) =>
+    circleIntersectsRect(x, y, ROBOT_RADIUS, rect)
+  )
+}
+
+function inDangerZoneBuffer(x: number, y: number): boolean {
+  return (
+    intersectsAny(x, y, world.dangerZones) &&
+    !intersectsAny(x, y, world.obstacles)
+  )
+}
+
+type CollisionType = 'wall' | 'obstacle'
+
+function getBlockingCollision(x: number, y: number): CollisionType | null {
+  if (intersectsAny(x, y, world.walls)) return 'wall'
+  if (intersectsAny(x, y, world.obstacles)) return 'obstacle'
+  return null
 }
 
 export class Simulation {
   robot: RobotState = { x: 0, y: 0, theta: 0, vx: 0, omega: 0 }
   trail: Array<[number, number]> = [[0, 0]]
-  telemetry: Telemetry = { distance: 0, collisions: 0 }
+  telemetry: Telemetry = {
+    distance: 0,
+    obstacleCollisions: 0,
+    dangerZoneCollisions: 0,
+  }
   control: ControlMessage = {
     type: 'control',
     forward: false,
@@ -70,11 +90,23 @@ export class Simulation {
     const newX = this.robot.x + vx * Math.cos(this.robot.theta) * DT
     const newY = this.robot.y + vx * Math.sin(this.robot.theta) * DT
 
-    if (collidesAt(newX, newY)) {
+    const collision = getBlockingCollision(newX, newY)
+    if (collision === 'obstacle') {
       this.robot.vx = 0
       this.robot.omega = 0
-      this.telemetry.collisions += 1
+      this.telemetry.obstacleCollisions += 1
       return
+    }
+    if (collision === 'wall') {
+      this.robot.vx = 0
+      this.robot.omega = 0
+      return
+    }
+
+    const wasInDangerBuffer = inDangerZoneBuffer(this.robot.x, this.robot.y)
+    const entersDangerBuffer = inDangerZoneBuffer(newX, newY)
+    if (!wasInDangerBuffer && entersDangerBuffer) {
+      this.telemetry.dangerZoneCollisions += 1
     }
 
     this.robot.x = newX
@@ -94,6 +126,10 @@ export class Simulation {
   reset(): void {
     this.robot = { x: 0, y: 0, theta: 0, vx: 0, omega: 0 }
     this.trail = [[0, 0]]
-    this.telemetry = { distance: 0, collisions: 0 }
+    this.telemetry = {
+      distance: 0,
+      obstacleCollisions: 0,
+      dangerZoneCollisions: 0,
+    }
   }
 }
