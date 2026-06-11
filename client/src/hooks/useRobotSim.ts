@@ -11,6 +11,14 @@ function closeWebSocket(ws: WebSocket): void {
   ws.close()
 }
 
+const NEUTRAL_CONTROL: ControlMessage = {
+  type: 'control',
+  forward: false,
+  backward: false,
+  rotateLeft: false,
+  rotateRight: false,
+}
+
 export type ConnectionStatus =
   | 'connecting'
   | 'connected'
@@ -108,6 +116,26 @@ export function useRobotSim() {
     openConnection(false)
   }, [openConnection])
 
+  const disconnect = useCallback(() => {
+    connectRequestedRef.current = false
+    clearReconnectTimer()
+    controlRef.current = NEUTRAL_CONTROL
+
+    const ws = wsRef.current
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(controlRef.current))
+    }
+
+    if (ws) {
+      closeWebSocket(ws)
+      wsRef.current = null
+    }
+
+    setStatus('disconnected')
+    setUpdateRate(0)
+    updateCountRef.current = 0
+  }, [clearReconnectTimer])
+
   const sendControl = useCallback((control: Omit<ControlMessage, 'type'>) => {
     controlRef.current = { type: 'control', ...control }
     const ws = wsRef.current
@@ -139,6 +167,7 @@ export function useRobotSim() {
     updateRate,
     sendControl,
     connect,
+    disconnect,
     lastUpdate: lastUpdateRef.current,
   }
 }
