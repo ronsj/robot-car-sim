@@ -57,8 +57,8 @@ export class Simulation {
 
     if (this.control.forward) vx += MAX_LINEAR_SPEED
     if (this.control.backward) vx -= MAX_LINEAR_SPEED
-    if (this.control.rotateLeft) omega += MAX_ANGULAR_SPEED
-    if (this.control.rotateRight) omega -= MAX_ANGULAR_SPEED
+    if (this.control.rotateLeft) omega -= MAX_ANGULAR_SPEED
+    if (this.control.rotateRight) omega += MAX_ANGULAR_SPEED
 
     this.robot.vx = vx
     this.robot.omega = omega
