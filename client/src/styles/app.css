@@ -153,6 +153,33 @@ body,
   animation: pulse 1s infinite;
 }
 
+.status-disconnected {
+  background: #64748b;
+  box-shadow: 0 0 6px #64748b;
+}
+
+.telemetry-connect-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #1e293b;
+  color: #e2e8f0;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    background 0.1s,
+    border-color 0.1s;
+}
+
+.telemetry-connect-btn:hover {
+  background: #334155;
+  border-color: #475569;
+}
+
 @keyframes pulse {
   0%,
   100% {

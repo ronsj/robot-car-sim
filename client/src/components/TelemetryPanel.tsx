@@ -7,6 +7,7 @@ interface TelemetryPanelProps {
   status: ConnectionStatus
   updateRate: number
   serverTime: number | null
+  onConnect: () => void
 }
 
 function formatHeading(theta: number): string {
@@ -29,13 +30,18 @@ export function TelemetryPanel({
   status,
   updateRate,
   serverTime,
+  onConnect,
 }: TelemetryPanelProps) {
   const statusClass =
     status === 'connected'
       ? 'status-connected'
       : status === 'connecting'
         ? 'status-connecting'
-        : 'status-reconnecting'
+        : status === 'reconnecting'
+          ? 'status-reconnecting'
+          : 'status-disconnected'
+
+  const showConnectButton = status === 'disconnected'
 
   return (
     <div className="telemetry-panel">
@@ -56,6 +62,15 @@ export function TelemetryPanel({
             label="Server time"
             value={new Date(serverTime).toLocaleTimeString()}
           />
+        )}
+        {showConnectButton && (
+          <button
+            type="button"
+            className="telemetry-connect-btn"
+            onClick={onConnect}
+          >
+            Connect
+          </button>
         )}
       </div>
 
