@@ -10,6 +10,18 @@ export interface World {
   height: number
   walls: Rect[]
   obstacles: Rect[]
+  dangerZones: Rect[]
+}
+
+export const DANGER_ZONE_BUFFER = 0.5
+
+export function dangerZoneForObstacle(obstacle: Rect): Rect {
+  return {
+    x: obstacle.x,
+    y: obstacle.y,
+    width: obstacle.width + 2 * DANGER_ZONE_BUFFER,
+    height: obstacle.height + 2 * DANGER_ZONE_BUFFER,
+  }
 }
 
 export interface RobotState {
