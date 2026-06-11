@@ -114,8 +114,12 @@ export function TelemetryPanel({
           value={`${telemetry.distance.toFixed(2)} m`}
         />
         <Row
-          label="Collisions"
-          value={String(telemetry.collisions)}
+          label="Obstacle hits"
+          value={String(telemetry.obstacleCollisions)}
+        />
+        <Row
+          label="Danger zone hits"
+          value={String(telemetry.dangerZoneCollisions)}
         />
       </div>
 

@@ -12,10 +12,15 @@ const DEFAULT_WORLD = {
   height: 20,
   walls: [] as { x: number; y: number; width: number; height: number }[],
   obstacles: [] as { x: number; y: number; width: number; height: number }[],
+  dangerZones: [] as { x: number; y: number; width: number; height: number }[],
 }
 
 const DEFAULT_ROBOT = { x: 0, y: 0, theta: 0, vx: 0, omega: 0 }
-const DEFAULT_TELEMETRY = { distance: 0, collisions: 0 }
+const DEFAULT_TELEMETRY = {
+  distance: 0,
+  obstacleCollisions: 0,
+  dangerZoneCollisions: 0,
+}
 
 export default function App() {
   const { state, status, updateRate, sendControl, connect, disconnect } =
