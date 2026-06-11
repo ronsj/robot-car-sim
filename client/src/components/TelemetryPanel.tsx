@@ -1,17 +1,17 @@
-import type { RobotState, Telemetry } from "../types";
-import type { ConnectionStatus } from "../hooks/useRobotSim";
+import type { RobotState, Telemetry } from '../types'
+import type { ConnectionStatus } from '../hooks/useRobotSim'
 
 interface TelemetryPanelProps {
-  robot: RobotState;
-  telemetry: Telemetry;
-  status: ConnectionStatus;
-  updateRate: number;
-  serverTime: number | null;
+  robot: RobotState
+  telemetry: Telemetry
+  status: ConnectionStatus
+  updateRate: number
+  serverTime: number | null
 }
 
 function formatHeading(theta: number): string {
-  const deg = ((theta * 180) / Math.PI + 360) % 360;
-  return `${deg.toFixed(1)}°`;
+  const deg = ((theta * 180) / Math.PI + 360) % 360
+  return `${deg.toFixed(1)}°`
 }
 
 function Row({ label, value }: { label: string; value: string }) {
@@ -20,12 +20,22 @@ function Row({ label, value }: { label: string; value: string }) {
       <span className="telemetry-label">{label}</span>
       <span className="telemetry-value">{value}</span>
     </div>
-  );
+  )
 }
 
-export function TelemetryPanel({ robot, telemetry, status, updateRate, serverTime }: TelemetryPanelProps) {
+export function TelemetryPanel({
+  robot,
+  telemetry,
+  status,
+  updateRate,
+  serverTime,
+}: TelemetryPanelProps) {
   const statusClass =
-    status === "connected" ? "status-connected" : status === "connecting" ? "status-connecting" : "status-reconnecting";
+    status === 'connected'
+      ? 'status-connected'
+      : status === 'connecting'
+        ? 'status-connecting'
+        : 'status-reconnecting'
 
   return (
     <div className="telemetry-panel">
@@ -33,27 +43,59 @@ export function TelemetryPanel({ robot, telemetry, status, updateRate, serverTim
 
       <div className="telemetry-section">
         <div className="telemetry-section-title">Connection</div>
-        <Row label="Status" value={status} />
-        <Row label="Update rate" value={`${updateRate} Hz`} />
-        {serverTime && <Row label="Server time" value={new Date(serverTime).toLocaleTimeString()} />}
+        <Row
+          label="Status"
+          value={status}
+        />
+        <Row
+          label="Update rate"
+          value={`${updateRate} Hz`}
+        />
+        {serverTime && (
+          <Row
+            label="Server time"
+            value={new Date(serverTime).toLocaleTimeString()}
+          />
+        )}
       </div>
 
       <div className="telemetry-section">
         <div className="telemetry-section-title">Position</div>
-        <Row label="X" value={robot.x.toFixed(2)} />
-        <Row label="Y" value={robot.y.toFixed(2)} />
-        <Row label="Heading" value={formatHeading(robot.theta)} />
+        <Row
+          label="X"
+          value={robot.x.toFixed(2)}
+        />
+        <Row
+          label="Y"
+          value={robot.y.toFixed(2)}
+        />
+        <Row
+          label="Heading"
+          value={formatHeading(robot.theta)}
+        />
       </div>
 
       <div className="telemetry-section">
         <div className="telemetry-section-title">Motion</div>
-        <Row label="Speed" value={`${robot.vx.toFixed(2)} m/s`} />
-        <Row label="Turn rate" value={`${robot.omega.toFixed(2)} rad/s`} />
-        <Row label="Distance" value={`${telemetry.distance.toFixed(2)} m`} />
-        <Row label="Collisions" value={String(telemetry.collisions)} />
+        <Row
+          label="Speed"
+          value={`${robot.vx.toFixed(2)} m/s`}
+        />
+        <Row
+          label="Turn rate"
+          value={`${robot.omega.toFixed(2)} rad/s`}
+        />
+        <Row
+          label="Distance"
+          value={`${telemetry.distance.toFixed(2)} m`}
+        />
+        <Row
+          label="Collisions"
+          value={String(telemetry.collisions)}
+        />
       </div>
 
       <div className={`telemetry-status ${statusClass}`} />
     </div>
-  );
+  )
 }

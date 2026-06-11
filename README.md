@@ -60,10 +60,10 @@ Start both the server and client in development mode:
 npm run dev
 ```
 
-| Service | URL |
-|---------|-----|
-| Web UI  | http://localhost:5173 |
-| WebSocket server | ws://localhost:3001 |
+| Service          | URL                   |
+| ---------------- | --------------------- |
+| Web UI           | http://localhost:5173 |
+| WebSocket server | ws://localhost:3001   |
 
 Run server or client individually:
 
@@ -74,12 +74,12 @@ npm run dev:client   # Vite dev server only
 
 ### Controls
 
-| Input | Action |
-|-------|--------|
-| ▲ / W / ↑ | Move forward |
+| Input     | Action        |
+| --------- | ------------- |
+| ▲ / W / ↑ | Move forward  |
 | ▼ / S / ↓ | Move backward |
-| ◀ / A / ← | Rotate left |
-| ▶ / D / → | Rotate right |
+| ◀ / A / ← | Rotate left   |
+| ▶ / D / → | Rotate right  |
 
 Hold a direction to drive continuously. Release to stop. Driving into walls or obstacles stops the robot and increments the collision counter in the telemetry panel.
 

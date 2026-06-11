@@ -9,7 +9,7 @@ body,
 #root {
   margin: 0;
   height: 100%;
-  font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
   background: #020617;
   color: #e2e8f0;
 }
@@ -195,7 +195,10 @@ body,
   cursor: pointer;
   user-select: none;
   touch-action: none;
-  transition: background 0.1s, border-color 0.1s, transform 0.05s;
+  transition:
+    background 0.1s,
+    border-color 0.1s,
+    transform 0.05s;
 }
 
 .dpad-btn:hover {

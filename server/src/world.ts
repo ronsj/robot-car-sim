@@ -1,12 +1,12 @@
-import type { World } from "../../shared/types.js";
+import type { World } from '../../shared/types.js'
 
-const ARENA_WIDTH = 20;
-const ARENA_HEIGHT = 20;
-const WALL_THICKNESS = 0.5;
+const ARENA_WIDTH = 20
+const ARENA_HEIGHT = 20
+const WALL_THICKNESS = 0.5
 
-const halfW = ARENA_WIDTH / 2;
-const halfH = ARENA_HEIGHT / 2;
-const t = WALL_THICKNESS;
+const halfW = ARENA_WIDTH / 2
+const halfH = ARENA_HEIGHT / 2
+const t = WALL_THICKNESS
 
 export const world: World = {
   width: ARENA_WIDTH,
@@ -25,4 +25,4 @@ export const world: World = {
     { x: -6, y: 5, width: 2.5, height: 1 },
     { x: 2, y: -6, width: 1.5, height: 2 },
   ],
-};
+}

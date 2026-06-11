@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+package-lock.json
+
+# Compiled shared types (source is types.ts)
+shared/*.js
