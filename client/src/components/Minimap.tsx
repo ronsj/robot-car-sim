@@ -4,7 +4,7 @@ import type { Rect, RobotState } from '../types'
 interface MinimapProps {
   robot: RobotState
   trail: Array<[number, number]>
-  world: { width: number; height: number; walls: Rect[]; obstacles: Rect[] }
+  world: { width: number; height: number; walls: Rect[]; obstacles: Rect[]; dangerZones: Rect[] }
 }
 
 function worldToCanvas(
@@ -85,6 +85,19 @@ export function Minimap({ robot, trail, world }: MinimapProps) {
     ctx.strokeStyle = '#475569'
     ctx.lineWidth = 2
     ctx.strokeRect(padding, padding, w - padding * 2, h - padding * 2)
+
+    for (const zone of world.dangerZones) {
+      drawRect(
+        ctx,
+        zone,
+        world.width,
+        world.height,
+        w,
+        h,
+        padding,
+        'rgba(234, 179, 8, 0.5)'
+      )
+    }
 
     for (const obs of world.obstacles) {
       drawRect(ctx, obs, world.width, world.height, w, h, padding, '#c2410c')

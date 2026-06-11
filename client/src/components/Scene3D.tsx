@@ -3,6 +3,23 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { Rect, RobotState } from '../types'
 
+function DangerZone({ rect }: { rect: Rect }) {
+  return (
+    <mesh
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[rect.x, 0.02, rect.y]}
+    >
+      <planeGeometry args={[rect.width, rect.height]} />
+      <meshStandardMaterial
+        color="#eab308"
+        transparent
+        opacity={0.45}
+        depthWrite={false}
+      />
+    </mesh>
+  )
+}
+
 function BoxObstacle({ rect, color }: { rect: Rect; color: string }) {
   const obstacleHeight = 1
   return (
@@ -79,7 +96,13 @@ function FollowCamera({ robot }: { robot: RobotState }) {
 
 interface Scene3DProps {
   robot: RobotState
-  world: { walls: Rect[]; obstacles: Rect[]; width: number; height: number }
+  world: {
+    walls: Rect[]
+    obstacles: Rect[]
+    dangerZones: Rect[]
+    width: number
+    height: number
+  }
 }
 
 export function Scene3D({ robot, world }: Scene3DProps) {
@@ -118,6 +141,12 @@ export function Scene3D({ robot, world }: Scene3DProps) {
         <Wall
           key={`wall-${i}`}
           rect={wall}
+        />
+      ))}
+      {world.dangerZones.map((zone, i) => (
+        <DangerZone
+          key={`danger-${i}`}
+          rect={zone}
         />
       ))}
       {world.obstacles.map((obs, i) => (
