@@ -15,6 +15,13 @@ interface TelemetryPanelProps {
   updateRate: number
   serverTime: number | null
   onConnect: () => void
+  onDisconnect: () => void
+}
+
+function connectionButtonLabel(status: ConnectionStatus): string {
+  if (status === 'disconnected') return 'Connect'
+  if (status === 'connected') return 'Disconnect'
+  return 'Cancel'
 }
 
 function formatHeading(theta: number): string {
@@ -38,9 +45,14 @@ export function TelemetryPanel({
   updateRate,
   serverTime,
   onConnect,
+  onDisconnect,
 }: TelemetryPanelProps) {
   const statusClass = STATUS_CLASS[status]
-  const showConnectButton = status === 'disconnected'
+  const isDisconnected = status === 'disconnected'
+  const connectionAction = isDisconnected ? onConnect : onDisconnect
+  const connectionButtonClass = isDisconnected
+    ? 'telemetry-connection-btn'
+    : 'telemetry-connection-btn telemetry-connection-btn--disconnect'
 
   return (
     <div className="telemetry-panel">
@@ -62,15 +74,13 @@ export function TelemetryPanel({
             value={new Date(serverTime).toLocaleTimeString()}
           />
         )}
-        {showConnectButton && (
-          <button
-            type="button"
-            className="telemetry-connect-btn"
-            onClick={onConnect}
-          >
-            Connect
-          </button>
-        )}
+        <button
+          type="button"
+          className={connectionButtonClass}
+          onClick={connectionAction}
+        >
+          {connectionButtonLabel(status)}
+        </button>
       </div>
 
       <div className="telemetry-section">

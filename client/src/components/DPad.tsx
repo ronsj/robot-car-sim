@@ -9,6 +9,7 @@ export interface ControlState {
 
 interface DPadProps {
   onControlChange: (control: ControlState) => void
+  disabled?: boolean
 }
 
 const EMPTY: ControlState = {
@@ -18,24 +19,33 @@ const EMPTY: ControlState = {
   rotateRight: false,
 }
 
-export function DPad({ onControlChange }: DPadProps) {
+export function DPad({ onControlChange, disabled = false }: DPadProps) {
   const [control, setControl] = useState<ControlState>(EMPTY)
 
   const update = useCallback(
     (patch: Partial<ControlState>) => {
+      if (disabled) return
       setControl((prev) => {
         const next = { ...prev, ...patch }
         onControlChange(next)
         return next
       })
     },
-    [onControlChange]
+    [disabled, onControlChange]
   )
 
   const press = (key: keyof ControlState) => update({ [key]: true })
   const release = (key: keyof ControlState) => update({ [key]: false })
 
   useEffect(() => {
+    if (disabled) {
+      setControl(EMPTY)
+    }
+  }, [disabled])
+
+  useEffect(() => {
+    if (disabled) return
+
     const keys = new Set<string>()
 
     const keyMap: Record<string, keyof ControlState> = {
@@ -85,13 +95,15 @@ export function DPad({ onControlChange }: DPadProps) {
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('keyup', onKeyUp)
     }
-  }, [onControlChange])
+  }, [disabled, onControlChange])
 
   const btn = (label: string, key: keyof ControlState, className: string) => (
     <button
       type="button"
       className={`dpad-btn ${className} ${control[key] ? 'active' : ''}`}
+      disabled={disabled}
       onPointerDown={(e) => {
+        if (disabled) return
         e.currentTarget.setPointerCapture(e.pointerId)
         press(key)
       }}
@@ -104,7 +116,7 @@ export function DPad({ onControlChange }: DPadProps) {
   )
 
   return (
-    <div className="dpad">
+    <div className={`dpad ${disabled ? 'dpad-disabled' : ''}`}>
       <div className="dpad-label">Controls</div>
       <div className="dpad-grid">
         <div />
@@ -117,7 +129,9 @@ export function DPad({ onControlChange }: DPadProps) {
         {btn('▼', 'backward', 'dpad-down')}
         <div />
       </div>
-      <div className="dpad-hint">WASD / Arrow keys</div>
+      <div className="dpad-hint">
+        {disabled ? 'Connect to drive' : 'WASD / Arrow keys'}
+      </div>
     </div>
   )
 }

@@ -158,7 +158,7 @@ body,
   box-shadow: 0 0 6px #64748b;
 }
 
-.telemetry-connect-btn {
+.telemetry-connection-btn {
   display: block;
   width: 100%;
   margin-top: 0.75rem;
@@ -175,9 +175,19 @@ body,
     border-color 0.1s;
 }
 
-.telemetry-connect-btn:hover {
+.telemetry-connection-btn:hover {
   background: #334155;
   border-color: #475569;
+}
+
+.telemetry-connection-btn--disconnect {
+  border-color: #7f1d1d;
+  color: #fecaca;
+}
+
+.telemetry-connection-btn--disconnect:hover {
+  background: #450a0a;
+  border-color: #991b1b;
 }
 
 @keyframes pulse {
@@ -250,6 +260,25 @@ body,
   text-align: center;
   font-size: 0.65rem;
   color: #475569;
+}
+
+.dpad-disabled .dpad-btn {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dpad-disabled .dpad-btn:hover {
+  background: #1e293b;
+}
+
+.dpad-disabled .dpad-btn.active {
+  background: #1e293b;
+  border-color: #334155;
+  transform: none;
+}
+
+.dpad-disabled .dpad-hint {
+  color: #64748b;
 }
 
 @media (max-width: 768px) {

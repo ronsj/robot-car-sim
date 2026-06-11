@@ -18,7 +18,10 @@ const DEFAULT_ROBOT = { x: 0, y: 0, theta: 0, vx: 0, omega: 0 }
 const DEFAULT_TELEMETRY = { distance: 0, collisions: 0 }
 
 export default function App() {
-  const { state, status, updateRate, sendControl, connect } = useRobotSim()
+  const { state, status, updateRate, sendControl, connect, disconnect } =
+    useRobotSim()
+
+  const isConnected = status === 'connected'
 
   const handleControlChange = useCallback(
     (control: {
@@ -76,8 +79,12 @@ export default function App() {
             updateRate={updateRate}
             serverTime={state?.t ?? null}
             onConnect={connect}
+            onDisconnect={disconnect}
           />
-          <DPad onControlChange={handleControlChange} />
+          <DPad
+            disabled={!isConnected}
+            onControlChange={handleControlChange}
+          />
         </aside>
       </main>
     </div>
