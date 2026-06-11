@@ -3,6 +3,14 @@ import type { ControlMessage, StateMessage } from '../types'
 
 const WS_URL = import.meta.env.VITE_WS_URL ?? 'ws://localhost:3001'
 
+function closeWebSocket(ws: WebSocket): void {
+  ws.onopen = null
+  ws.onmessage = null
+  ws.onclose = null
+  ws.onerror = null
+  ws.close()
+}
+
 export type ConnectionStatus =
   | 'connecting'
   | 'connected'
@@ -39,8 +47,7 @@ export function useRobotSim() {
       clearReconnectTimer()
 
       if (wsRef.current) {
-        wsRef.current.onclose = null
-        wsRef.current.close()
+        closeWebSocket(wsRef.current)
         wsRef.current = null
       }
 
@@ -120,8 +127,7 @@ export function useRobotSim() {
       connectRequestedRef.current = false
       clearReconnectTimer()
       if (wsRef.current) {
-        wsRef.current.onclose = null
-        wsRef.current.close()
+        closeWebSocket(wsRef.current)
         wsRef.current = null
       }
     }
