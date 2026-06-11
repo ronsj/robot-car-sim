@@ -281,6 +281,54 @@ body,
   color: #64748b;
 }
 
+.danger-zone-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.75);
+}
+
+.danger-zone-modal {
+  max-width: 360px;
+  margin: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #854d0e;
+  border-radius: 12px;
+  background: #1e293b;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.danger-zone-message {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #fef08a;
+}
+
+.danger-zone-continue-btn {
+  padding: 0.6rem 1.5rem;
+  border: 1px solid #ca8a04;
+  border-radius: 8px;
+  background: #eab308;
+  color: #1e293b;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.1s,
+    border-color 0.1s;
+}
+
+.danger-zone-continue-btn:hover {
+  background: #facc15;
+  border-color: #eab308;
+}
+
 @media (max-width: 768px) {
   .app-main {
     grid-template-columns: 1fr;
