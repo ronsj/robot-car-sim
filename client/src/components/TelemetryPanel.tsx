@@ -1,6 +1,13 @@
 import type { RobotState, Telemetry } from '../types'
 import type { ConnectionStatus } from '../hooks/useRobotSim'
 
+const STATUS_CLASS: Record<ConnectionStatus, string> = {
+  connected: 'status-connected',
+  connecting: 'status-connecting',
+  reconnecting: 'status-reconnecting',
+  disconnected: 'status-disconnected',
+}
+
 interface TelemetryPanelProps {
   robot: RobotState
   telemetry: Telemetry
@@ -32,15 +39,7 @@ export function TelemetryPanel({
   serverTime,
   onConnect,
 }: TelemetryPanelProps) {
-  const statusClass =
-    status === 'connected'
-      ? 'status-connected'
-      : status === 'connecting'
-        ? 'status-connecting'
-        : status === 'reconnecting'
-          ? 'status-reconnecting'
-          : 'status-disconnected'
-
+  const statusClass = STATUS_CLASS[status]
   const showConnectButton = status === 'disconnected'
 
   return (
