@@ -16,6 +16,7 @@ function buildState(): StateMessage {
     trail: [...sim.trail],
     telemetry: { ...sim.telemetry },
     world,
+    dangerZonePaused: sim.dangerZonePaused,
   }
 }
 
@@ -39,6 +40,8 @@ wss.on('connection', (ws) => {
       const msg = JSON.parse(data.toString()) as ClientMessage
       if (msg.type === 'control') {
         sim.setControl(msg)
+      } else if (msg.type === 'continue') {
+        sim.acknowledgeDangerZone()
       }
     } catch {
       // ignore malformed messages

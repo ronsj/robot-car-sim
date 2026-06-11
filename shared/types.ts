@@ -46,6 +46,10 @@ export interface ControlMessage {
   rotateRight: boolean
 }
 
+export interface ContinueMessage {
+  type: 'continue'
+}
+
 export interface StateMessage {
   type: 'state'
   t: number
@@ -53,9 +57,10 @@ export interface StateMessage {
   trail: Array<[number, number]>
   telemetry: Telemetry
   world: World
+  dangerZonePaused: boolean
 }
 
-export type ClientMessage = ControlMessage
+export type ClientMessage = ControlMessage | ContinueMessage
 export type ServerMessage = StateMessage
 
 export const ROBOT_RADIUS = 0.35

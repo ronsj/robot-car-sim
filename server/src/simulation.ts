@@ -66,12 +66,23 @@ export class Simulation {
     rotateLeft: false,
     rotateRight: false,
   }
+  dangerZonePaused = false
 
   setControl(control: ControlMessage): void {
+    if (this.dangerZonePaused) return
     this.control = control
   }
 
+  acknowledgeDangerZone(): void {
+    this.dangerZonePaused = false
+  }
+
   step(): void {
+    if (this.dangerZonePaused) {
+      this.robot.vx = 0
+      this.robot.omega = 0
+      return
+    }
     let vx = 0
     let omega = 0
 
@@ -107,6 +118,17 @@ export class Simulation {
     const entersDangerBuffer = inDangerZoneBuffer(newX, newY)
     if (!wasInDangerBuffer && entersDangerBuffer) {
       this.telemetry.dangerZoneCollisions += 1
+      this.dangerZonePaused = true
+      this.robot.vx = 0
+      this.robot.omega = 0
+      this.control = {
+        type: 'control',
+        forward: false,
+        backward: false,
+        rotateLeft: false,
+        rotateRight: false,
+      }
+      return
     }
 
     this.robot.x = newX
@@ -131,5 +153,6 @@ export class Simulation {
       obstacleCollisions: 0,
       dangerZoneCollisions: 0,
     }
+    this.dangerZonePaused = false
   }
 }
