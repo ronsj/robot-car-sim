@@ -4,7 +4,7 @@ import { SIM_HZ } from '../../shared/types.js'
 import { Simulation } from './simulation.js'
 import { world } from './world.js'
 
-const PORT = 3001
+const PORT = Number(process.env.PORT) || 3001
 const sim = new Simulation()
 const clients = new Set<WebSocket>()
 
