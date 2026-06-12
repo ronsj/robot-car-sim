@@ -1,7 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ControlMessage, StateMessage } from '../types'
 
-const WS_URL = import.meta.env.VITE_WS_URL ?? 'ws://localhost:3001'
+function getWsUrl(): string {
+  if (import.meta.env.VITE_WS_URL) {
+    return import.meta.env.VITE_WS_URL
+  }
+  if (import.meta.env.DEV) {
+    return 'ws://localhost:3001'
+  }
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    return `${protocol}//${window.location.host}`
+  }
+  return 'ws://localhost:3001'
+}
+
+const WS_URL = getWsUrl()
 
 function closeWebSocket(ws: WebSocket): void {
   ws.onopen = null
