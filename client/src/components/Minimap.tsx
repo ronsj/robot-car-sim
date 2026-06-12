@@ -7,19 +7,51 @@ interface MinimapProps {
   world: { width: number; height: number; walls: Rect[]; obstacles: Rect[]; dangerZones: Rect[] }
 }
 
+interface Viewport {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+function getViewport(
+  canvasW: number,
+  canvasH: number,
+  worldW: number,
+  worldH: number,
+  padding: number
+): Viewport {
+  const maxW = canvasW - padding * 2
+  const maxH = canvasH - padding * 2
+  const worldAspect = worldW / worldH
+
+  let width: number
+  let height: number
+  if (maxW / maxH > worldAspect) {
+    height = maxH
+    width = height * worldAspect
+  } else {
+    width = maxW
+    height = width / worldAspect
+  }
+
+  return {
+    x: padding + (maxW - width) / 2,
+    y: padding + (maxH - height) / 2,
+    width,
+    height,
+  }
+}
+
 function worldToCanvas(
   x: number,
   y: number,
   worldW: number,
   worldH: number,
-  canvasW: number,
-  canvasH: number,
-  padding: number
+  viewport: Viewport
 ): [number, number] {
-  const innerW = canvasW - padding * 2
-  const innerH = canvasH - padding * 2
-  const cx = padding + ((x + worldW / 2) / worldW) * innerW
-  const cy = padding + ((worldH / 2 - y) / worldH) * innerH
+  const cx = viewport.x + ((x + worldW / 2) / worldW) * viewport.width
+  const cy = viewport.y + ((worldH / 2 - y) / worldH) * viewport.height
   return [cx, cy]
 }
 
@@ -28,9 +60,7 @@ function drawRect(
   rect: Rect,
   worldW: number,
   worldH: number,
-  canvasW: number,
-  canvasH: number,
-  padding: number,
+  viewport: Viewport,
   fill: string
 ) {
   const [x1, y1] = worldToCanvas(
@@ -38,18 +68,14 @@ function drawRect(
     rect.y + rect.height / 2,
     worldW,
     worldH,
-    canvasW,
-    canvasH,
-    padding
+    viewport
   )
   const [x2, y2] = worldToCanvas(
     rect.x + rect.width / 2,
     rect.y - rect.height / 2,
     worldW,
     worldH,
-    canvasW,
-    canvasH,
-    padding
+    viewport
   )
   ctx.fillStyle = fill
   ctx.fillRect(
@@ -78,13 +104,14 @@ export function Minimap({ robot, trail, world }: MinimapProps) {
     const w = rect.width
     const h = rect.height
     const padding = 12
+    const viewport = getViewport(w, h, world.width, world.height, padding)
 
     ctx.fillStyle = '#0f172a'
     ctx.fillRect(0, 0, w, h)
 
     ctx.strokeStyle = '#475569'
     ctx.lineWidth = 2
-    ctx.strokeRect(padding, padding, w - padding * 2, h - padding * 2)
+    ctx.strokeRect(viewport.x, viewport.y, viewport.width, viewport.height)
 
     for (const zone of world.dangerZones) {
       drawRect(
@@ -92,15 +119,13 @@ export function Minimap({ robot, trail, world }: MinimapProps) {
         zone,
         world.width,
         world.height,
-        w,
-        h,
-        padding,
+        viewport,
         'rgba(234, 179, 8, 0.5)'
       )
     }
 
     for (const obs of world.obstacles) {
-      drawRect(ctx, obs, world.width, world.height, w, h, padding, '#c2410c')
+      drawRect(ctx, obs, world.width, world.height, viewport, '#c2410c')
     }
 
     if (trail.length > 1) {
@@ -110,9 +135,7 @@ export function Minimap({ robot, trail, world }: MinimapProps) {
         trail[0][1],
         world.width,
         world.height,
-        w,
-        h,
-        padding
+        viewport
       )
       ctx.moveTo(startX, startY)
       for (let i = 1; i < trail.length; i++) {
@@ -123,9 +146,7 @@ export function Minimap({ robot, trail, world }: MinimapProps) {
           trail[i][1],
           world.width,
           world.height,
-          w,
-          h,
-          padding
+          viewport
         )
         ctx.lineTo(px, py)
       }
@@ -139,9 +160,7 @@ export function Minimap({ robot, trail, world }: MinimapProps) {
       robot.y,
       world.width,
       world.height,
-      w,
-      h,
-      padding
+      viewport
     )
     const size = 8
     ctx.save()
@@ -161,6 +180,7 @@ export function Minimap({ robot, trail, world }: MinimapProps) {
     <canvas
       ref={canvasRef}
       className="minimap-canvas"
+      style={{ aspectRatio: `${world.width} / ${world.height}` }}
     />
   )
 }
