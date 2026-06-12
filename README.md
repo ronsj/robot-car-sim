@@ -2,6 +2,10 @@
 
 A browser-based robot car simulation with a real-time 3D view, top-down minimap, D-pad controls, and live telemetry. The server runs an authoritative physics simulation over WebSocket; the client renders state with React and Three.js.
 
+## Demo
+
+[https://robot-car-sim-production.up.railway.app/](https://robot-car-sim-production.up.railway.app/)
+
 ## Setup
 
 **Requirements:** Node.js 18+ and npm.
