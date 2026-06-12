@@ -68,13 +68,13 @@ export default function App() {
                 world={world}
               />
             </Canvas>
-          </div>
-          <div className="minimap-container">
-            <Minimap
-              robot={robot}
-              trail={trail}
-              world={world}
-            />
+            <div className="minimap-container">
+              <Minimap
+                robot={robot}
+                trail={trail}
+                world={world}
+              />
+            </div>
           </div>
         </section>
 
